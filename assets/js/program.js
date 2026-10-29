@@ -1,30 +1,40 @@
 (function () {
-  var header = document.querySelector('.site-header');
-  var toggle = document.querySelector('.menu-toggle');
-  var panel = document.getElementById('menu-panel');
+  // Sticky section bar: appears once the hero has scrolled away and highlights the section in view.
+  var hero = document.querySelector('.hero');
+  var bar = document.querySelector('.program-bar');
+  var spy = bar && bar.querySelector('[data-spy]');
+  var links = spy ? Array.prototype.slice.call(spy.querySelectorAll('a[href^="#"]')) : [];
+  var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var current = null;
+  var ticking = false;
 
-  function onScroll() {
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  function update() {
+    ticking = false;
+    var visible = hero.getBoundingClientRect().bottom < 0;
+    bar.classList.toggle('is-visible', visible);
 
-  function setMenu(open) {
-    panel.hidden = !open;
-    document.body.classList.toggle('menu-open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    var line = bar.offsetHeight + 48;
+    var active = null;
+    targets.forEach(function (t, i) {
+      if (t && t.getBoundingClientRect().top <= line) active = links[i];
+    });
+    if (active === current) return;
+    if (current) current.removeAttribute('aria-current');
+    current = active;
+    if (!current) return;
+    current.setAttribute('aria-current', 'true');
+    if (spy.scrollWidth > spy.clientWidth) {
+      spy.scrollTo({ left: current.parentElement.offsetLeft - 8, behavior: 'smooth' });
+    }
   }
-  toggle.addEventListener('click', function () { setMenu(panel.hidden); });
-  panel.addEventListener('click', function (e) {
-    if (e.target.closest('a')) setMenu(false);
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !panel.hidden) { setMenu(false); toggle.focus(); }
-  });
-  window.matchMedia('(min-width: 1080px)').addEventListener('change', function (mq) {
-    if (mq.matches) setMenu(false);
-  });
+
+  if (hero && bar) {
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
 
   // MailerLite forms post into a hidden frame so the visitor stays on the page.
   // Without JS they fall back to a normal full-page POST to the same endpoint.
