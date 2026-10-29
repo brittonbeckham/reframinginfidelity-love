@@ -11,8 +11,8 @@ Landing page for **reframinginfidelity.love**, a program from [The Magical Story
   - A white, editorial hero: a large serif title, a one-line promise, two buttons, and a photo set on an offset block in the program's accent color.
   - An "at a glance" bar (format, length, structure, who it's for, investment).
   - A sticky section bar that appears after the hero and highlights the section in view.
-  - A block timeline: three steps across on desktop and down on phones, joined by an accent line.
-  - One dark section (the letters) in a very deep shade of the accent.
+  - Named block cards: three bordered cards across on desktop and stacked on phones. Each card has its modules and a Week 4 integration note.
+  - A rhythm of section types: white sections with a photo beside the text, one near-black section (the statistics), one deep-accent section (the poem), a full-width three-photo strip, and a full-width photo band with a quote card.
   - The Magical Story of Us footer.
 - Fonts are Cormorant Garamond (headings) and Manrope (body), from Google Fonts. The sigil logo is in `assets/brand/`.
 
@@ -53,20 +53,21 @@ Old MailerLite section anchors (`#Pricing-4`, `#FAQ-4`, `#Side-by-side-image-con
 To start a new program site (for example, Reframing the Mind for Co-creation):
 
 1. **Copy** `assets/css/program.css`, `assets/js/program.js`, `assets/brand/`, and `index.html` into the new repo. Add that program's photos to `assets/img/`.
-2. **Set the accent.** Change the four `--program-*` variables at the top of `program.css`:
-   - `--program-accent`: buttons, title emphasis, rules, and the timeline.
-   - `--program-accent-deep`: the one dark section and button hover.
-   - `--program-accent-tint`: small blocks and one thin band only. It is never a page background.
-   - `--program-accent-soft`: emphasis text on the dark section.
+2. **Set the colors.** Change the four `--program-*` variables at the top of `program.css`:
+   - `--program-accent`: buttons, title emphasis, rules, and numbers.
+   - `--program-accent-deep`: the deep-accent section (`.deep`) and button hover.
+   - `--program-accent-soft`: emphasis text on dark sections.
+   - `--program-night`: the near-black section (`.night`).
 
-   For Reframing the Mind, the suggested values are `#2b3a67` (indigo), `#121a30`, `#eceff7`, and `#c5cdea`.
+   For Reframing the Mind, the suggested values are `#2b3a67` (indigo), `#121a30`, `#c5cdea`, and `#0c0f1a`. Page backgrounds stay white.
 3. **Change the content blocks in `index.html`:**
    - `<title>`, meta description, and social tags.
    - Wordmark in the program header and in the sticky bar (`.wordmark-name`, `.bar-mark`).
    - Hero: eyebrow, title, promise line, note, Apply link, photo, and caption.
    - At-a-glance items: Format, Length, Structure, For, Investment.
    - Section links in both navs. Each `href` must match a section `id`.
-   - Overview, the timeline stages (one `.stage` per block or week, with its modules), facilitators, story, letters (or remove that dark section), pricing plans, FAQ, and forms.
+   - Overview, the `.night` section (this page uses it for statistics with cited sources; replace or remove it), block cards (one `.block` per block or week, with a name, a one-line purpose, and its modules), the photo strip and photo band, facilitators, story, the `.deep` section and letters, pricing plans, FAQ, and forms.
+   - Any statistic must link to its original source.
 4. **Forms.** Point each `action` at that program's form endpoint. Keep `data-form` on the form so it posts in the background and shows its `.form-success` message.
 5. **Keep shared.** Leave the parent strip, the footer, the fonts, the 20px button radius, and the 8px input radius unchanged across programs.
 
