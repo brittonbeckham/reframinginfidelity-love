@@ -1,26 +1,30 @@
 # Reframing Infidelity — static site
 
-Self-contained static export of the MailerLite landing page for **reframinginfidelity.love**, intended for GitHub Pages (or any static host) without depending on MailerLite’s page runtime.
+Landing page for **reframinginfidelity.love**, a program from [The Magical Story of Us](https://themagicalstoryofus.com/) (Britton & Carolee Beckham). Plain HTML, CSS, and vanilla JS, hosted on GitHub Pages.
 
 ## Origin
 
-- Source: published MailerLite page HTML captured from the live/rendered page for site/page IDs under account `994210` (editor: Nebula / MailerLite Sites).
-- Images were pulled from `storage.mlcdn.com` / `assets.mlcdn.com` and rewritten to local `assets/img/` and `assets/icons/`.
-- MailerLite tracking, personalization (`universal.js` / JSONP), heatmap, and reCAPTCHA scripts were removed so the page works offline/static.
-- Brand CSS (inline utility + design tokens) and layout markup were preserved; no new marketing copy was added.
-- Fonts: **Inter** and **Merriweather** via Google Fonts CDN (replacing `fonts.mailerlite.com`).
+- First built as a static export of the MailerLite landing page (account `994210`), with images pulled from `storage.mlcdn.com` / `assets.mlcdn.com` into `assets/img/`.
+- The page uses the shared **program template** (`assets/css/program.css`, `assets/js/program.js`). Program sites belong to The Magical Story of Us family, and each one has its own identity:
+  - A slim black parent strip at the top: "A program from [sigil] The Magical Story of Us", linking to themagicalstoryofus.com.
+  - The program's own header, with the program name as the wordmark, in-page section links, and an Apply button.
+  - A white, editorial hero: a large serif title, a one-line promise, two buttons, and a photo set on an offset block in the program's accent color.
+  - An "at a glance" bar (format, length, structure, who it's for, investment).
+  - A sticky section bar that appears after the hero and highlights the section in view.
+  - Named block cards: three bordered cards across on desktop and stacked on phones. Each card has its modules and a Week 4 integration note.
+  - A rhythm of section types: white sections with a photo beside the text, one near-black section (the statistics), one deep-accent section (the poem), a full-width three-photo strip, and a full-width photo band with a quote card.
+  - The Magical Story of Us footer.
+- Fonts are Cormorant Garamond (headings) and Manrope (body), from Google Fonts. The sigil logo is in `assets/brand/`.
 
 ## Open locally
 
 From the repository root:
 
 ```bash
-python3 -m http.server 8080
+python -m http.server 8090
 ```
 
-Then open http://127.0.0.1:8080/
-
-Or open `index.html` directly in a browser (some browsers restrict font CDN/`file://`; the local server is preferred).
+Then open http://localhost:8090/
 
 ## GitHub Pages
 
@@ -30,16 +34,42 @@ Or open `index.html` directly in a browser (some browsers restrict font CDN/`fil
 
 ## Forms (important)
 
-Subscribe / discovery / contact forms still use MailerLite `action` URLs on `dashboard.mailerlite.com` (`…/subscribe` and `…/contact` with signatures). That can keep working while DNS still points at MailerLite or while those endpoints accept public POSTs.
+The discovery-call, contact, and mailing-list forms POST to MailerLite `action` URLs on `dashboard.mailerlite.com` (`…/subscribe` and `…/contact` with signatures), using MailerLite's field names (`fields.email`, `fields.name`, `fields.message`, `fields.source_form`, `contact_email`).
 
-**After leaving MailerLite**, those posts will break. Rewire later to your own subscribe / discovery / contact handlers (or a form service). Apply buttons that point at the Google Form are unchanged and do not depend on MailerLite.
+`assets/js/program.js` sends each form into a hidden frame so the visitor stays on the page and sees a thank-you message. With JavaScript off, the form does a normal full-page POST to the same URL.
 
-reCAPTCHA UI was stripped for static hosting; native browser form POST is used instead of MailerLite’s XHR + reCAPTCHA flow.
+**After leaving MailerLite**, those posts will break. Rewire them to your own subscribe / discovery / contact handlers (or a form service). The Apply buttons point at the Google Form and do not depend on MailerLite.
 
-## Social links (preserved)
+Old MailerLite section anchors (`#Pricing-4`, `#FAQ-4`, `#Side-by-side-image-content-2`, `#People-5`, `#Listed-items-on-side-2`) still land on the matching sections.
+
+## Social links
 
 - Carolee: Facebook profile `61553743413386`, Instagram `instagram.com/caroleebeckham`
-- Britton: as in the original HTML (Facebook, Instagram/veritas.sounds, X)
+- Britton: Facebook `brittonleebeckham`, Instagram `veritas.sounds`, X `BrittonBeckham`
+- The Magical Story of Us: Instagram, TikTok, Spotify podcast, and email in the footer
+
+## Reusing this for another program
+
+To start a new program site (for example, Reframing the Mind for Co-creation):
+
+1. **Copy** `assets/css/program.css`, `assets/js/program.js`, `assets/brand/`, and `index.html` into the new repo. Add that program's photos to `assets/img/`.
+2. **Set the colors.** Change the four `--program-*` variables at the top of `program.css`:
+   - `--program-accent`: buttons, title emphasis, rules, and numbers.
+   - `--program-accent-deep`: the deep-accent section (`.deep`) and button hover.
+   - `--program-accent-soft`: emphasis text on dark sections.
+   - `--program-night`: the near-black section (`.night`).
+
+   For Reframing the Mind, the suggested values are `#2b3a67` (indigo), `#121a30`, `#c5cdea`, and `#0c0f1a`. Page backgrounds stay white.
+3. **Change the content blocks in `index.html`:**
+   - `<title>`, meta description, and social tags.
+   - Wordmark in the program header and in the sticky bar (`.wordmark-name`, `.bar-mark`).
+   - Hero: eyebrow, title, promise line, note, Apply link, photo, and caption.
+   - At-a-glance items: Format, Length, Structure, For, Investment.
+   - Section links in both navs. Each `href` must match a section `id`.
+   - Overview, the `.night` section (this page uses it for statistics with cited sources; replace or remove it), block cards (one `.block` per block or week, with a name, a one-line purpose, and its modules), the photo strip and photo band, facilitators, story, the `.deep` section and letters, pricing plans, FAQ, and forms.
+   - Any statistic must link to its original source.
+4. **Forms.** Point each `action` at that program's form endpoint. Keep `data-form` on the form so it posts in the background and shows its `.form-success` message.
+5. **Keep shared.** Leave the parent strip, the footer, the fonts, the 20px button radius, and the 8px input radius unchanged across programs.
 
 ## Layout
 
@@ -49,7 +79,9 @@ CNAME
 README.md
 .nojekyll
 assets/
-  css/universal.css
-  icons/   (favicon + social icons)
-  img/     (page images + OG image)
+  css/program.css   (shared program template; per-program variables at the top)
+  js/program.js     (sticky section bar, forms, reveal on scroll)
+  brand/            (sigil logo, also used as the favicon)
+  img/              (page images + OG image; not every image is used on the page)
+  icons/, css/universal.css   (from the MailerLite export, unused)
 ```
