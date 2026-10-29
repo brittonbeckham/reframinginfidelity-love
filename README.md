@@ -1,26 +1,22 @@
 # Reframing Infidelity — static site
 
-Self-contained static export of the MailerLite landing page for **reframinginfidelity.love**, intended for GitHub Pages (or any static host) without depending on MailerLite’s page runtime.
+Landing page for **reframinginfidelity.love**, a program from [The Magical Story of Us](https://themagicalstoryofus.com/) (Britton & Carolee Beckham). Plain HTML, CSS, and vanilla JS, hosted on GitHub Pages.
 
 ## Origin
 
-- Source: published MailerLite page HTML captured from the live/rendered page for site/page IDs under account `994210` (editor: Nebula / MailerLite Sites).
-- Images were pulled from `storage.mlcdn.com` / `assets.mlcdn.com` and rewritten to local `assets/img/` and `assets/icons/`.
-- MailerLite tracking, personalization (`universal.js` / JSONP), heatmap, and reCAPTCHA scripts were removed so the page works offline/static.
-- Brand CSS (inline utility + design tokens) and layout markup were preserved; no new marketing copy was added.
-- Fonts: **Inter** and **Merriweather** via Google Fonts CDN (replacing `fonts.mailerlite.com`).
+- First built as a static export of the MailerLite landing page (account `994210`), with images pulled from `storage.mlcdn.com` / `assets.mlcdn.com` into `assets/img/`.
+- The current design follows the main site's brand: black, white, and gold, Cormorant Garamond for headings and Manrope for body text (Google Fonts), and the circular sigil logo in `assets/brand/`.
+- The header and footer link back to themagicalstoryofus.com.
 
 ## Open locally
 
 From the repository root:
 
 ```bash
-python3 -m http.server 8080
+python -m http.server 8090
 ```
 
-Then open http://127.0.0.1:8080/
-
-Or open `index.html` directly in a browser (some browsers restrict font CDN/`file://`; the local server is preferred).
+Then open http://localhost:8090/
 
 ## GitHub Pages
 
@@ -30,16 +26,19 @@ Or open `index.html` directly in a browser (some browsers restrict font CDN/`fil
 
 ## Forms (important)
 
-Subscribe / discovery / contact forms still use MailerLite `action` URLs on `dashboard.mailerlite.com` (`…/subscribe` and `…/contact` with signatures). That can keep working while DNS still points at MailerLite or while those endpoints accept public POSTs.
+The discovery-call, contact, and mailing-list forms POST to MailerLite `action` URLs on `dashboard.mailerlite.com` (`…/subscribe` and `…/contact` with signatures), using MailerLite's field names (`fields.email`, `fields.name`, `fields.message`, `fields.source_form`, `contact_email`).
 
-**After leaving MailerLite**, those posts will break. Rewire later to your own subscribe / discovery / contact handlers (or a form service). Apply buttons that point at the Google Form are unchanged and do not depend on MailerLite.
+`assets/js/site.js` sends each form into a hidden frame so the visitor stays on the page and sees a thank-you message. With JavaScript off, the form does a normal full-page POST to the same URL.
 
-reCAPTCHA UI was stripped for static hosting; native browser form POST is used instead of MailerLite’s XHR + reCAPTCHA flow.
+**After leaving MailerLite**, those posts will break. Rewire them to your own subscribe / discovery / contact handlers (or a form service). The Apply buttons point at the Google Form and do not depend on MailerLite.
 
-## Social links (preserved)
+Old MailerLite section anchors (`#Pricing-4`, `#FAQ-4`, `#Side-by-side-image-content-2`, `#People-5`, `#Listed-items-on-side-2`) still land on the matching sections.
+
+## Social links
 
 - Carolee: Facebook profile `61553743413386`, Instagram `instagram.com/caroleebeckham`
-- Britton: as in the original HTML (Facebook, Instagram/veritas.sounds, X)
+- Britton: Facebook `brittonleebeckham`, Instagram `veritas.sounds`, X `BrittonBeckham`
+- The Magical Story of Us: Instagram, TikTok, Spotify podcast, and email in the footer
 
 ## Layout
 
@@ -49,7 +48,9 @@ CNAME
 README.md
 .nojekyll
 assets/
-  css/universal.css
-  icons/   (favicon + social icons)
-  img/     (page images + OG image)
+  css/site.css      (page styles)
+  js/site.js        (menu, forms, reveal on scroll)
+  brand/            (sigil logo, also used as the favicon)
+  img/              (page images + OG image; not every image is used on the page)
+  icons/, css/universal.css   (from the MailerLite export, unused)
 ```
